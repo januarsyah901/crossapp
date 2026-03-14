@@ -7,7 +7,23 @@ export default function Home() {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [status, setStatus] = useState({ state: 'loading', data: null });
   const [toast, setToast] = useState({ show: false, message: '' });
+
+  const checkStatus = async () => {
+    setStatus({ state: 'loading', data: null });
+    try {
+      const response = await fetch('/api/status');
+      const data = await response.json();
+      if (data.connected) {
+        setStatus({ state: 'online', data });
+      } else {
+        setStatus({ state: 'offline', data: null });
+      }
+    } catch (err) {
+      setStatus({ state: 'offline', data: null });
+    }
+  };
 
   const fetchTweets = async () => {
     setLoading(true);
@@ -28,6 +44,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    checkStatus();
     fetchTweets();
   }, []);
 
@@ -85,6 +102,17 @@ export default function Home() {
             <h1>Simple X</h1>
           </div>
           <p className="subtitle">Connect. Share. Post.</p>
+          <div 
+            className={`status-badge status-${status.state}`} 
+            onClick={status.state === 'offline' ? checkStatus : undefined}
+            style={{ cursor: status.state === 'offline' ? 'pointer' : 'default' }}
+            title={status.state === 'offline' ? 'Click to retry connection' : ''}
+          >
+            <span className="status-dot"></span>
+            {status.state === 'loading' && 'Checking connection...'}
+            {status.state === 'online' && `Connected as @${status.data?.username}`}
+            {status.state === 'offline' && 'Disconnected from X (Retry?)'}
+          </div>
         </header>
 
         <section className="card">
