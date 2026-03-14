@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +15,9 @@
   "type": "commonjs",
   "dependencies": {
     "dotenv": "^17.3.1",
-    "express": "^5.2.1",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
     "twitter-api-v2": "^1.29.0"
   },
   "devDependencies": {
